@@ -2,18 +2,19 @@ import React, { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
-import LandingPage from './pages/LandingPage.tsx'
-import ModulesHub from './pages/ModulesHub.tsx'
-import ModuleIntro from './pages/ModuleIntro.tsx'
-import ModuleCNDV from './pages/ModuleCNDV.tsx'
-import ModulePBC from './pages/ModulePBC.tsx'
-import ModuleNhanThuc from './pages/ModuleNhanThuc.tsx'
-import ModuleCNDVLS1 from './pages/ModuleCNDVLS1.tsx'
-import ModuleCNDVLS2 from './pages/ModuleCNDVLS2.tsx'
-import AIPhilosopher from './pages/AIPhilosopher.tsx'
-import PhilosopherProfile from './pages/PhilosopherProfile.tsx'
-import SchoolProfile from './pages/SchoolProfile.tsx'
-import CustomCursor from './components/ui/CustomCursor.tsx'
+import LandingPage from './pages/LandingPage'
+import ModulesHub from './pages/ModulesHub'
+import ModuleIntro from './pages/ModuleIntro'
+import ModuleCNDV from './pages/ModuleCNDV'
+import ModulePBC from './pages/ModulePBC'
+import ModuleNhanThuc from './pages/ModuleNhanThuc'
+import ModuleCNDVLS1 from './pages/ModuleCNDVLS1'
+import ModuleCNDVLS2 from './pages/ModuleCNDVLS2'
+import AIPhilosopher from './pages/AIPhilosopher'
+import PhilosopherProfile from './pages/PhilosopherProfile'
+import SchoolProfile from './pages/SchoolProfile'
+import Quiz from './pages/Quiz'
+import CustomCursor from './components/ui/CustomCursor'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -38,7 +39,9 @@ function GlobalBackground() {
   const isDark =
     location.pathname === "/" ||
     location.pathname.startsWith("/modules") ||
-    location.pathname.startsWith("/ai")
+    location.pathname.startsWith("/ai") ||
+    location.pathname.startsWith("/quiz") ||
+    location.pathname.startsWith("/philosopher/")
 
   if (!isDark) return null
 
@@ -60,6 +63,7 @@ function AppRoutes() {
         <Route path="/ai" element={<AIPhilosopher />} />
         <Route path="/philosopher/:id" element={<PhilosopherProfile />} />
         <Route path="/school/:id" element={<SchoolProfile />} />
+        <Route path="/quiz" element={<Quiz />} />
       </Routes>
     </div>
   )

@@ -5,7 +5,43 @@ import { BookOpen, Cpu, Menu, X } from "lucide-react";
 /* ══════════════════════════════════════════════
    PHI LOGO — Larger, more detailed
 ══════════════════════════════════════════════ */
-function PhiLogo() {
+
+const PHILOSOPHER_NAV_THEMES: Record<string, any> = {
+  socrates: {
+    color1: '#fff8e1', color2: '#f5d87a', color3: '#d4af37', color4: '#b8962c',
+    colorBase: '#f5d87a',
+    colorGlow: 'rgba(212,175,55,0.5)',
+    bgScrolled: 'linear-gradient(to bottom, rgba(16,12,0,0.95), rgba(30,22,0,0.9))',
+    bgTop: 'linear-gradient(to bottom, rgba(4,6,14,0.2), rgba(10,14,28,0.05))',
+    blob1: 'bg-purple-500/20', blob2: 'bg-cyan-500/20'
+  },
+  marcus: {
+    color1: '#e1f0ff', color2: '#88ccff', color3: '#3388ff', color4: '#0055cc',
+    colorBase: '#66aaff',
+    colorGlow: 'rgba(60,130,255,0.5)',
+    bgScrolled: 'linear-gradient(to bottom, rgba(0,10,25,0.95), rgba(0,20,50,0.9))',
+    bgTop: 'linear-gradient(to bottom, rgba(2,8,19,0.2), rgba(5,16,26,0.05))',
+    blob1: 'bg-blue-500/20', blob2: 'bg-cyan-400/20'
+  },
+  marx: {
+    color1: '#ffe1e1', color2: '#ff5555', color3: '#cc0000', color4: '#880000',
+    colorBase: '#ff3333',
+    colorGlow: 'rgba(255,51,51,0.5)',
+    bgScrolled: 'linear-gradient(to bottom, rgba(25,0,0,0.95), rgba(40,0,0,0.9))',
+    bgTop: 'linear-gradient(to bottom, rgba(10,10,10,0.2), rgba(26,20,20,0.05))',
+    blob1: 'bg-red-500/20', blob2: 'bg-orange-500/20'
+  },
+  laozi: {
+    color1: '#e1ffee', color2: '#66ffbb', color3: '#00cc66', color4: '#008844',
+    colorBase: '#66ffbb',
+    colorGlow: 'rgba(102,255,187,0.5)',
+    bgScrolled: 'linear-gradient(to bottom, rgba(0,20,10,0.95), rgba(0,35,15,0.9))',
+    bgTop: 'linear-gradient(to bottom, rgba(3,10,8,0.2), rgba(9,26,20,0.05))',
+    blob1: 'bg-emerald-500/20', blob2: 'bg-teal-500/20'
+  }
+};
+
+function PhiLogo({ theme }: { theme: any }) {
   return (
     <svg
       width="52"
@@ -72,7 +108,7 @@ function PhiLogo() {
         cx="26"
         cy="2"
         r="3"
-        fill="#f5d87a"
+        fill={theme.colorBase}
         style={{
           animation: "orbit-ring 5s linear infinite",
           transformOrigin: "26px 26px",
@@ -96,7 +132,7 @@ function PhiLogo() {
         cx="26"
         cy="50"
         r="2"
-        fill="#b8962c"
+        fill={theme.color4}
         opacity="0.7"
         style={{
           animation: "orbit-ring 5s linear infinite",
@@ -124,14 +160,14 @@ function PhiLogo() {
           y2="52"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0%" stopColor="#fff8e1" />
-          <stop offset="40%" stopColor="#f5d87a" />
-          <stop offset="70%" stopColor="#d4af37" />
-          <stop offset="100%" stopColor="#b8962c" />
+          <stop offset="0%" stopColor={theme.color1} />
+          <stop offset="40%" stopColor={theme.color2} />
+          <stop offset="70%" stopColor={theme.color3} />
+          <stop offset="100%" stopColor={theme.color4} />
         </linearGradient>
         <radialGradient id="gInner" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#f5d87a" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="#d4af37" stopOpacity="0" />
+          <stop offset="0%" stopColor={theme.color2} stopOpacity="0.9" />
+          <stop offset="100%" stopColor={theme.color3} stopOpacity="0" />
         </radialGradient>
       </defs>
     </svg>
@@ -170,6 +206,13 @@ const PLANET_CONFIGS: Record<string, PlanetConfig> = {
     orbitR: 44,
     dur: 3.0,
     glow: "rgba(199,125,255,0.7)",
+  },
+  "/quiz": {
+    color: "#a4b5c4", // silver / amethyst mix
+    size: 8,
+    orbitR: 50,
+    dur: 2.3,
+    glow: "rgba(164,181,196,0.7)",
   },
 };
 
@@ -371,7 +414,7 @@ function NavLink({
 /* ══════════════════════════════════════════════
    MINI STARS CANVAS for Navbar
 ══════════════════════════════════════════════ */
-export function NavStars() {
+export function NavStars({ theme }: { theme?: any }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -470,10 +513,12 @@ export function NavStars() {
         ctx.beginPath();
         ctx.moveTo(m.x, m.y);
         ctx.lineTo(m.x - m.vx * 4, m.y - m.vy * 4); // tail
-        ctx.strokeStyle = `rgba(245, 216, 122, ${opacity * 0.8})`;
+        ctx.globalAlpha = opacity * 0.8;
+        ctx.strokeStyle = theme?.colorBase || "#d4af37";
         ctx.lineWidth = 1.5;
         ctx.lineCap = "round";
         ctx.stroke();
+        ctx.globalAlpha = 1.0;
 
         if (m.life >= m.maxLife || m.x < -50) meteors.splice(i, 1);
       }
@@ -498,6 +543,7 @@ const navLinks = [
   { to: "/", label: "Trang chủ", exact: true },
   { to: "/modules", label: "Modules", exact: false },
   { to: "/ai", label: "AI Triết học", exact: false },
+  { to: "/quiz", label: "Khảo nghiệm", exact: false },
 ];
 
 export default function Navbar() {
@@ -508,7 +554,18 @@ export default function Navbar() {
   const isDark =
     location.pathname === "/" ||
     location.pathname.startsWith("/modules") ||
-    location.pathname.startsWith("/ai");
+    location.pathname.startsWith("/ai") ||
+    location.pathname.startsWith("/philosopher/") ||
+    location.pathname.startsWith("/quiz");
+
+  let themeId = "socrates";
+  if (location.pathname.startsWith("/philosopher/")) {
+    const id = location.pathname.split("/").pop();
+    if (id && ["socrates", "marcus", "marx", "laozi"].includes(id)) {
+      themeId = id;
+    }
+  }
+  const theme = PHILOSOPHER_NAV_THEMES[themeId] || PHILOSOPHER_NAV_THEMES["socrates"];
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 30);
@@ -517,14 +574,14 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  const navBgStyle = isDark
+    const navBgStyle = isDark
     ? {
         background: scrolled
-          ? "linear-gradient(to bottom, rgba(5,7,16,0.98), rgba(12,16,36,0.95))"
-          : "linear-gradient(to bottom, rgba(4,6,14,0.2), rgba(10,14,28,0.05))",
+          ? theme.bgScrolled
+          : theme.bgTop,
         backdropFilter: scrolled ? "blur(32px)" : "blur(12px)",
         WebkitBackdropFilter: scrolled ? "blur(32px)" : "blur(12px)",
-        borderBottom: "1px solid rgba(212,175,55,0.15)",
+        borderBottom: `1px solid ${theme.colorBase}25`,
       }
     : {
         background: "rgba(252,251,249,0.96)",
@@ -556,7 +613,7 @@ export default function Navbar() {
           </div>
         )}
         {/* ── Subtle star canvas background (dark mode only) ── */}
-        {isDark && <NavStars />}
+        {isDark && <NavStars theme={theme} />}
 
         {/* ── Gold glow line at bottom (always dark) ── */}
         {isDark && (
@@ -564,7 +621,7 @@ export default function Navbar() {
             className="absolute bottom-0 left-0 right-0 h-px pointer-events-none"
             style={{
               background:
-                "linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.35) 30%, rgba(245,216,122,0.5) 50%, rgba(212,175,55,0.35) 70%, transparent 100%)",
+                `linear-gradient(90deg, transparent 0%, ${theme.colorBase}50 30%, ${theme.colorBase}80 50%, ${theme.colorBase}50 70%, transparent 100%)`,
             }}
           />
         )}
@@ -575,7 +632,7 @@ export default function Navbar() {
             className="absolute -bottom-px left-0 right-0 h-[2px] pointer-events-none"
             style={{
               background:
-                "linear-gradient(90deg, transparent, rgba(212,175,55,0.6) 40%, rgba(245,216,122,0.8) 50%, rgba(212,175,55,0.6) 60%, transparent)",
+                `linear-gradient(90deg, transparent, ${theme.colorBase}90 40%, ${theme.colorBase}cc 50%, ${theme.colorBase}90 60%, transparent)`,
             }}
           />
         )}
@@ -588,13 +645,13 @@ export default function Navbar() {
             style={{ cursor: "none" }}
           >
             <div className="relative flex-shrink-0">
-              <PhiLogo />
+              <PhiLogo theme={theme} />
               {/* Radial glow on hover */}
               <div
                 className="absolute inset-0 rounded-full blur-xl opacity-0 group-hover:opacity-70 transition-opacity duration-500 pointer-events-none"
                 style={{
                   background:
-                    "radial-gradient(circle, rgba(212,175,55,0.5) 0%, transparent 65%)",
+                    `radial-gradient(circle, ${theme.colorGlow} 0%, transparent 65%)`,
                 }}
               />
             </div>
@@ -605,14 +662,14 @@ export default function Navbar() {
                   fontSize: "1.35rem",
                   fontWeight: 700,
                   letterSpacing: "0.1em",
-                  background:
-                    "linear-gradient(135deg, #fff8e1 0%, #f5d87a 25%, #d4af37 55%, #f5d87a 75%, #b8962c 100%)",
+                  backgroundImage:
+                    `linear-gradient(135deg, ${theme.color1} 0%, ${theme.color2} 25%, ${theme.color3} 55%, ${theme.color2} 75%, ${theme.color4} 100%)`,
                   backgroundSize: "250% auto",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
                   animation: "gold-shimmer 5s linear infinite",
-                  filter: "drop-shadow(0 0 10px rgba(212,175,55,0.5))",
+                  filter: `drop-shadow(0 0 10px ${theme.colorGlow})`,
                 }}
               >
                 MARXTERCHEF
@@ -623,9 +680,7 @@ export default function Navbar() {
                   fontWeight: 700,
                   letterSpacing: "0.35em",
                   textTransform: "uppercase",
-                  color: isDark
-                    ? "rgba(212,175,55,0.55)"
-                    : "rgba(212,175,55,0.75)",
+                  color: `${theme.colorBase}90`,
                   marginTop: "2px",
                 }}
               >
@@ -655,9 +710,9 @@ export default function Navbar() {
               className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 hover:scale-105 active:scale-95 relative overflow-hidden group"
               style={{
                 background:
-                  "linear-gradient(135deg, #d4af37, #f5d87a, #b8962c)",
+                  `linear-gradient(135deg, ${theme.color3}, ${theme.colorBase}, ${theme.color4})`,
                 color: "#060912",
-                boxShadow: "0 4px 20px rgba(212,175,55,0.35)",
+                boxShadow: `0 4px 20px ${theme.colorGlow}`,
                 cursor: "none",
               }}
             >
@@ -672,11 +727,9 @@ export default function Navbar() {
               to="/ai"
               className="w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 hover:scale-110 relative overflow-hidden group"
               style={{
-                borderColor: "rgba(212,175,55,0.35)",
-                color: "#d4af37",
-                background: isDark
-                  ? "rgba(212,175,55,0.06)"
-                  : "rgba(212,175,55,0.06)",
+                borderColor: `${theme.colorBase}50`,
+                color: theme.colorBase,
+                background: `${theme.colorBase}10`,
                 cursor: "none",
               }}
             >
@@ -684,7 +737,7 @@ export default function Navbar() {
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 style={{
                   background:
-                    "radial-gradient(circle at center, rgba(212,175,55,0.15) 0%, transparent 70%)",
+                    `radial-gradient(circle at center, ${theme.colorGlow} 0%, transparent 70%)`,
                 }}
               />
               <Cpu size={16} className="relative z-10" />
@@ -694,7 +747,7 @@ export default function Navbar() {
             <button
               className="md:hidden w-10 h-10 rounded-full border flex items-center justify-center transition-colors"
               style={{
-                borderColor: "rgba(212,175,55,0.2)",
+                borderColor: `${theme.colorBase}40`,
                 color: isDark ? "rgba(255,255,255,0.7)" : "#1a2639",
                 cursor: "none",
               }}
@@ -721,7 +774,7 @@ export default function Navbar() {
               className="absolute w-full h-[2px]"
               style={{
                 background:
-                  "linear-gradient(90deg, transparent, rgba(212,175,55,0.5), transparent)",
+                  `linear-gradient(90deg, transparent, ${theme.colorGlow}, transparent)`,
                 animation: "scan-line 5s linear infinite",
               }}
             />
@@ -743,7 +796,7 @@ export default function Navbar() {
                     {
                       fontFamily: "Cinzel, serif",
                       background: active
-                        ? "linear-gradient(135deg, #d4af37, #f5d87a)"
+                        ? `linear-gradient(135deg, ${theme.color3}, ${theme.color2})`
                         : "none",
                       WebkitBackgroundClip: active ? "text" : "initial",
                       WebkitTextFillColor: active
@@ -779,7 +832,7 @@ export default function Navbar() {
               onClick={() => setMobileOpen(false)}
               className="mt-4 px-10 py-4 rounded-full text-sm font-bold uppercase tracking-widest hover:scale-105 transition-transform"
               style={{
-                background: "linear-gradient(135deg, #d4af37, #f5d87a)",
+                background: `linear-gradient(135deg, ${theme.color3}, ${theme.color2})`,
                 color: "#060912",
                 cursor: "none",
               }}

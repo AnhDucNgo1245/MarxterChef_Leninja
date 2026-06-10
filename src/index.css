@@ -436,3 +436,75 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+/* ── IMMERSIVE 2.0 ANIMATIONS ── */
+@keyframes float-mist {
+  0% { transform: translateX(-10%); opacity: 0.3; }
+  50% { transform: translateX(10%); opacity: 0.6; }
+  100% { transform: translateX(-10%); opacity: 0.3; }
+}
+
+@keyframes god-ray {
+  0% { opacity: 0.2; transform: rotate(15deg) scaleY(1); }
+  50% { opacity: 0.5; transform: rotate(15deg) scaleY(1.1); }
+  100% { opacity: 0.2; transform: rotate(15deg) scaleY(1); }
+}
+
+@keyframes shake-gear {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  2% { transform: translate(-2px, 1px) rotate(1deg); }
+  4% { transform: translate(2px, -1px) rotate(-1deg); }
+  6% { transform: translate(-1px, 2px) rotate(0deg); }
+  8% { transform: translate(1px, -2px) rotate(1deg); }
+  10% { transform: translate(0, 0) rotate(0deg); }
+  100% { transform: translate(0, 0) rotate(360deg); }
+}
+
+@keyframes bamboo-sway {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes laser-scan {
+  0% { transform: translateY(-100%); opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.8; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+/* ── IMMERSIVE 3.0 ANIMATIONS ── */
+@keyframes fall-letter {
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+  20% { opacity: 0.4; }
+  80% { opacity: 0.4; }
+  100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+}
+
+@keyframes fall-snow {
+  0% { transform: translateY(-10vh) translateX(0); opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.8; }
+  100% { transform: translateY(110vh) translateX(100px); opacity: 0; }
+}
+
+@keyframes siren-sweep {
+  0% { transform: translateX(-150%) skewX(-45deg); opacity: 0; }
+  20% { opacity: 0.5; }
+  80% { opacity: 0.5; }
+  100% { transform: translateX(150%) skewX(-45deg); opacity: 0; }
+}
+
+@keyframes swing-chain {
+  0% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+  100% { transform: rotate(-5deg); }
+}
+
+@keyframes fly-bird {
+  0% { transform: translate(-20vw, 100vh) scale(0.5); opacity: 0; }
+  20% { opacity: 0.6; }
+  80% { opacity: 0.6; }
+  100% { transform: translate(120vw, -20vh) scale(1.5); opacity: 0; }
+}
+

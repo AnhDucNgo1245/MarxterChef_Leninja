@@ -1,237 +1,732 @@
-import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, Quote, Brain, Sparkles, MoveRight } from 'lucide-react'
-import { useEffect, useState, useMemo } from 'react'
+import { Link, useParams } from "react-router-dom";
+import { ArrowLeft, Quote, Brain, Sparkles, MoveRight } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
 type ThemeConfig = {
-  bgGradient: string
-  cardBg: string
-  glowColor: string
-  textColor: string
-  effectType: 'socrates' | 'marcus' | 'marx' | 'laozi'
-}
+  bgGradient: string;
+  cardBg: string;
+  glowColor: string;
+  textColor: string;
+  effectType: "socrates" | "marcus" | "marx" | "laozi";
+  cardPattern: string;
+};
 
 type PhilosopherData = {
-  name: string
-  role: string
-  life: string
-  letter: string
-  theme: ThemeConfig
-  bio: string[]
-  coreIdeas: { title: string; desc: string }[]
-  quotes: string[]
-}
+  name: string;
+  role: string;
+  life: string;
+  letter: string;
+  theme: ThemeConfig;
+  bio: string[];
+  coreIdeas: { title: string; desc: string }[];
+  quotes: string[];
+};
 
 const philosopherData: Record<string, PhilosopherData> = {
   socrates: {
-    name: 'Socrates',
-    role: 'Đặt Câu Hỏi Biện Chứng',
-    life: '470 – 399 TCN',
-    letter: 'S',
+    name: "Socrates",
+    role: "Khởi nguồn Triết học Phương Tây",
+    life: "470 – 399 TCN",
+    letter: "S",
     theme: {
-      bgGradient: 'from-[#0a0a05] via-[#14120b] to-[#0a0a05]',
-      cardBg: 'bg-[#1a170f]/60',
-      glowColor: 'rgba(212,175,55,0.3)',
-      textColor: 'text-[#f5d87a]',
-      effectType: 'socrates',
+      bgGradient: "from-[#050604] via-[#12140d] to-[#050604]",
+      cardBg: "bg-[#15170f]/40",
+      glowColor: "rgba(255,215,100,0.4)",
+      textColor: "text-[#ffd764]",
+      effectType: "socrates",
+      cardPattern:
+        "radial-gradient(circle at 100% 100%, rgba(255,215,100,0.05) 0%, transparent 50%), linear-gradient(135deg, rgba(255,255,255,0.02) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.02) 50%, rgba(255,255,255,0.02) 75%, transparent 75%, transparent)",
     },
     bio: [
-      'Socrates là triết gia người Athen cổ đại, được xem là một trong những người sáng lập triết học phương Tây. Ông không để lại tác phẩm nào, toàn bộ tư tưởng của ông được lưu truyền qua các đối thoại của Plato.',
-      'Bị xét xử và kết án tử hình với tội danh "làm hỏng tuổi trẻ Athens" và "không tin vào các vị thần của nhà nước", Socrates đã bình thản uống thuốc độc, lựa chọn cái chết thay vì từ bỏ triết học.',
+      "Socrates là triết gia người Athen cổ đại, được xem là một trong những người sáng lập triết học phương Tây. Ông không để lại tác phẩm nào, toàn bộ tư tưởng của ông được lưu truyền qua các đối thoại của Plato.",
+      'Bị xét xử và kết án tử hình với tội danh "làm hỏng tuổi trẻ Athens" và "không tin vào các vị thần của nhà nước", Socrates đã bình thản uống thuốc độc, lựa chọn cái chết thay vì từ bỏ triết lý sống của mình.',
     ],
     coreIdeas: [
-      { title: 'Phương pháp Socratic', desc: 'Phương pháp đặt câu hỏi liên tiếp để khám phá sự thật, buộc đối thoại phải tự suy xét và nhận ra mâu thuẫn trong nhận thức của mình.' },
-      { title: 'Biết mình không biết gì', desc: 'Câu nói nổi tiếng "Tôi chỉ biết rằng tôi không biết gì" phản ánh sự khiêm tốn nhận thức — điều kiện đầu tiên để học hỏi thật sự.' },
-      { title: 'Đức hạnh là tri thức', desc: 'Socrates tin rằng con người làm điều xấu là do thiếu hiểu biết, chứ không phải do bản chất xấu. Ai hiểu thật sự cái tốt thì tự nhiên sẽ làm điều tốt.' },
+      {
+        title: "Phương pháp Socratic",
+        desc: "Một hình thức đối thoại biện chứng, dùng việc đặt câu hỏi liên tiếp để buộc người đối diện phải tự suy xét, vạch trần mâu thuẫn nội tại và tự mình khám phá ra chân lý.",
+      },
+      {
+        title: "Biết mình không biết gì",
+        desc: "Sự thông thái thực sự không nằm ở việc sở hữu mọi câu trả lời, mà ở việc nhận thức được giới hạn sâu sắc của sự hiểu biết cá nhân. Sự khiêm tốn nhận thức là nền tảng của mọi tri thức.",
+      },
+      {
+        title: "Đức hạnh là tri thức",
+        desc: "Con người làm điều xấu xa không phải do bản chất ác độc, mà do sự ngu muội và thiếu hiểu biết. Bất kỳ ai thực sự thấu hiểu cái Thiện, tự khắc sẽ hành động hướng Thiện.",
+      },
     ],
     quotes: [
-      'Cuộc đời không phản tư là cuộc đời không đáng sống.',
-      'Tôi chỉ biết rằng tôi không biết gì.',
-      'Hãy tự biết mình.',
-      'Cách duy nhất để làm điều tốt là biết điều tốt là gì.',
+      "Cuộc đời không phản tư là cuộc đời không đáng sống.",
+      "Tôi không thể dạy ai bất cứ điều gì. Tôi chỉ có thể khiến họ suy nghĩ.",
+      "Sự thông thái thực sự duy nhất là biết rằng bạn không biết gì cả.",
+      "Hãy tự biết mình.",
     ],
   },
   marcus: {
-    name: 'Marcus Aurelius',
-    role: 'Chủ Nghĩa Khắc Kỷ',
-    life: '121 – 180 CN',
-    letter: 'M',
+    name: "Marcus Aurelius",
+    role: "Hoàng đế Triết gia Khắc kỷ",
+    life: "121 – 180 CN",
+    letter: "M",
     theme: {
-      bgGradient: 'from-[#120505] via-[#1a0f12] to-[#0a080a]',
-      cardBg: 'bg-[#2a1515]/50',
-      glowColor: 'rgba(255,80,80,0.25)',
-      textColor: 'text-[#ff9999]',
-      effectType: 'marcus',
+      bgGradient: "from-[#020813] via-[#05101a] to-[#01040a]",
+      cardBg: "bg-[#08152a]/30",
+      glowColor: "rgba(60,130,255,0.4)",
+      textColor: "text-[#66aaff]",
+      effectType: "marcus",
+      cardPattern:
+        'radial-gradient(circle at 0% 0%, rgba(60,130,255,0.08) 0%, transparent 60%), url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%220.04%22/%3E%3C/svg%3E")',
     },
     bio: [
-      'Marcus Aurelius là Hoàng đế La Mã từ năm 161 đến 180 CN, đồng thời là nhà triết học Khắc kỷ vĩ đại. Ông được mệnh danh là "Hoàng đế Triết gia" — người duy nhất trong lịch sử La Mã kết hợp hoàn hảo quyền lực tuyệt đối với đức hạnh cao cả.',
-      'Tác phẩm "Suy tưởng" (Meditations) của ông là bộ nhật ký cá nhân, ghi lại những suy tư thực hành triết học hàng ngày của một vị hoàng đế. Cuốn sách không được viết ra để xuất bản, nhưng đã trở thành một trong những tác phẩm truyền cảm hứng nhất mọi thời đại.',
+      'Marcus Aurelius là Hoàng đế La Mã trị vì từ năm 161 đến 180 CN. Ông được mệnh danh là "Hoàng đế Triết gia", biểu tượng tối cao của hình mẫu kết hợp giữa quyền lực tuyệt đối của một đế chế và đạo đức cá nhân thanh cao.',
+      'Tác phẩm "Suy tưởng" (Meditations) vốn chỉ là những trang nhật ký riêng tư được viết giữa các chiến dịch quân sự đẫm máu trong những đêm đông lạnh giá ở Germania. Không hề có ý định xuất bản, cuốn sách ghi lại những cuộc đấu tranh nội tâm để giữ vững phẩm hạnh Khắc kỷ giữa tâm bão của quyền lực, chiến tranh và dịch bệnh.',
     ],
     coreIdeas: [
-      { title: 'Dichotomy of Control', desc: 'Chỉ tập trung vào những thứ trong tầm kiểm soát của mình (suy nghĩ, hành động, phán đoán), và chấp nhận bình thản những thứ ngoài tầm kiểm soát.' },
-      { title: 'Memento Mori', desc: 'Nhớ rằng mình sẽ chết. Nhận thức về cái chết không phải để bi quan, mà để trân trọng hiện tại và sống với mục đích.' },
-      { title: 'Amor Fati', desc: 'Yêu thương số phận — chấp nhận và thậm chí yêu quý mọi điều xảy đến, kể cả nghịch cảnh, vì chúng là cơ hội để rèn luyện đức hạnh.' },
+      {
+        title: "Dichotomy of Control (Phân đôi Kiểm soát)",
+        desc: "Tâm trí con người chỉ có thể kiểm soát những gì thuộc về nội tâm: phán đoán, ham muốn, ý chí. Mọi thứ bên ngoài (danh tiếng, tiền tài, cái chết) đều nằm ngoài tầm với và phải được tiếp nhận bằng sự điềm tĩnh tuyệt đối.",
+      },
+      {
+        title: "Memento Mori (Hãy nhớ rằng bạn sẽ chết)",
+        desc: "Ý thức sâu sắc về cái chết không phải là sự yếm thế, mà là lăng kính để nhìn rõ giá trị thực sự của cuộc sống. Mọi vinh quang thế tục rồi cũng thành tro bụi, chỉ có đức hạnh là trường tồn.",
+      },
+      {
+        title: "Amor Fati (Tình yêu Định mệnh)",
+        desc: 'Đừng chỉ chịu đựng nghịch cảnh, hãy ôm lấy nó bằng ngọn lửa nhiệt huyết. Khó khăn ném vào một ngọn lửa lớn sẽ chỉ làm ngọn lửa ấy bùng cháy dữ dội hơn. "Trở ngại chính là con đường."',
+      },
     ],
     quotes: [
-      'Tâm trí bạn sẽ mang màu sắc của những ý nghĩ thường trực.',
-      'Bạn có sức mạnh trong tâm trí mình, không phải bên ngoài. Hãy nhận ra điều đó, và bạn sẽ tìm thấy sức mạnh.',
-      'Trở ngại là con đường.',
-      'Sự mất mát chỉ là sự thay đổi, và thay đổi là niềm vui của tự nhiên.',
+      "Tâm trí bạn sẽ mang màu sắc của những ý nghĩ thường trực.",
+      "Bạn có sức mạnh đối với tâm trí mình, không phải đối với các sự kiện bên ngoài. Nhận ra điều này, bạn sẽ tìm thấy sức mạnh.",
+      "Sự báo thù tốt nhất là không trở thành kẻ đã làm tổn thương mình.",
+      "Nó không xảy ra với tôi, mà nó xảy ra cho tôi.",
     ],
   },
   marx: {
-    name: 'Karl Marx',
-    role: 'Duy Vật Biện Chứng',
-    life: '1818 – 1883',
-    letter: 'K',
+    name: "Karl Marx",
+    role: "Duy Vật Biện Chứng & Đấu Tranh Giai Cấp",
+    life: "1818 – 1883",
+    letter: "K",
     theme: {
-      bgGradient: 'from-[#141414] via-[#1f1b1c] to-[#121212]',
-      cardBg: 'bg-[#242424]/80',
-      glowColor: 'rgba(200,40,40,0.35)',
-      textColor: 'text-[#ff5555]',
-      effectType: 'marx',
+      bgGradient: "from-[#0a0a0a] via-[#1a1414] to-[#080808]",
+      cardBg: "bg-[#221818]/40",
+      glowColor: "rgba(255,20,20,0.5)",
+      textColor: "text-[#ff3333]",
+      effectType: "marx",
+      cardPattern:
+        "repeating-linear-gradient(45deg, rgba(255,0,0,0.02) 0px, rgba(255,0,0,0.02) 2px, transparent 2px, transparent 8px), linear-gradient(180deg, rgba(0,0,0,0.5) 0%, transparent 100%)",
     },
     bio: [
-      'Karl Marx là nhà triết học, kinh tế học và nhà cách mạng người Đức. Cùng với Friedrich Engels, ông đã đặt nền móng cho chủ nghĩa cộng sản khoa học qua các tác phẩm như "Tuyên ngôn Đảng Cộng sản" (1848) và "Tư bản" (Das Kapital, 1867).',
-      'Marx sống phần lớn cuộc đời trong cảnh nghèo túng ở London, nhưng tư tưởng của ông đã định hình lại lịch sử thế giới thế kỷ 20, ảnh hưởng đến nhiều cuộc cách mạng và phong trào xã hội trên toàn cầu.',
+      'Karl Marx là triết gia, nhà kinh tế học chính trị, sử học và lý luận cách mạng vĩ đại người Đức. Cùng với Friedrich Engels, ông đã soạn thảo "Tuyên ngôn của Đảng Cộng sản" (1848) và công trình đồ sộ "Tư bản luận" (Das Kapital), giải phẫu toàn diện cơ chế bóc lột của chủ nghĩa tư bản.',
+      "Bất chấp việc sống phần lớn cuộc đời trong cảnh lưu vong và nghèo đói tận cùng tại London, ngòi bút của Marx đã châm ngòi cho một sự thay đổi kiến trúc thượng tầng vĩnh viễn, truyền cảm hứng cho hàng loạt cuộc cách mạng xã hội định hình lại toàn bộ thế kỷ 20.",
     ],
     coreIdeas: [
-      { title: 'Chủ nghĩa Duy vật Biện chứng', desc: 'Vật chất là nền tảng của thực tại, ý thức là sự phản ánh của vật chất. Mâu thuẫn nội tại là động lực của sự phát triển (Luận đề → Phản đề → Tổng hợp).' },
-      { title: 'Chủ nghĩa Duy vật Lịch sử', desc: 'Lực lượng sản xuất và quan hệ sản xuất quyết định cơ cấu xã hội. Lịch sử là lịch sử đấu tranh giai cấp — cuộc xung đột giữa những người sở hữu tư liệu sản xuất và những người bị bóc lột.' },
-      { title: 'Phê phán tha hóa', desc: 'Trong xã hội tư bản, người lao động bị tha hóa khỏi sản phẩm lao động, quá trình lao động, loài người và đồng loại. Giải phóng con người đòi hỏi xóa bỏ nguồn gốc của tha hóa này.' },
+      {
+        title: "Duy vật Biện chứng & Duy vật Lịch sử",
+        desc: "Thực tại không được định hình bởi ý niệm hay thần thánh, mà bởi điều kiện vật chất. Lực lượng sản xuất phát triển mâu thuẫn với quan hệ sản xuất lỗi thời, tạo ra bước ngoặt tất yếu của lịch sử thông qua đấu tranh.",
+      },
+      {
+        title: "Lịch sử là Đấu tranh Giai cấp",
+        desc: "Lịch sử của mọi xã hội từ trước đến nay thực chất chỉ là lịch sử của các cuộc đấu tranh giai cấp. Chế độ tư bản đã đơn giản hóa mâu thuẫn này thành hai cực đối lập: Giai cấp Tư sản (bóc lột) và Giai cấp Vô sản (bị bóc lột).",
+      },
+      {
+        title: "Sự tha hóa của Lao động (Alienation)",
+        desc: "Trong xã hội tư bản, người công nhân bị tha hóa khỏi chính sản phẩm họ làm ra, khỏi quá trình sản xuất, khỏi bản ngã của chính mình và khỏi đồng loại. Con người bị biến thành một bánh răng vô tri trong cỗ máy tích lũy tư bản.",
+      },
     ],
     quotes: [
-      'Các triết gia mới chỉ giải thích thế giới, vấn đề là cải tạo thế giới.',
-      'Lịch sử của tất cả mọi xã hội từ trước đến nay đều là lịch sử đấu tranh giai cấp.',
-      'Tôn giáo là thuốc phiện của nhân dân.',
-      'Từ mỗi người theo năng lực, cho mỗi người theo nhu cầu.',
+      "Các triết gia mới chỉ giải thích thế giới bằng nhiều cách khác nhau, vấn đề là cải tạo thế giới.",
+      "Lịch sử của tất cả mọi xã hội từ trước đến nay đều là lịch sử đấu tranh giai cấp.",
+      "Giai cấp vô sản chẳng có gì để mất ngoài những xiềng xích của họ. Họ có một thế giới để giành lấy.",
+      "Sự phát triển tự do của mỗi người là điều kiện cho sự phát triển tự do của tất cả mọi người.",
     ],
   },
   laozi: {
-    name: 'Lão Tử',
-    role: 'Triết Học Đạo Gia',
-    life: 'TK 6 – 5 TCN',
-    letter: 'L',
+    name: "Lão Tử",
+    role: "Khai Sơn Tổ Sư Đạo Giáo",
+    life: "TK 6 – 5 TCN",
+    letter: "L",
     theme: {
-      bgGradient: 'from-[#06120b] via-[#0b1f14] to-[#040d08]',
-      cardBg: 'bg-[#0f2b1c]/50',
-      glowColor: 'rgba(50,255,150,0.2)',
-      textColor: 'text-[#88ffcc]',
-      effectType: 'laozi',
+      bgGradient: "from-[#030a08] via-[#091a14] to-[#020504]",
+      cardBg: "bg-[#0b241b]/30",
+      glowColor: "rgba(40,255,160,0.3)",
+      textColor: "text-[#66ffbb]",
+      effectType: "laozi",
+      cardPattern:
+        'radial-gradient(circle at 50% 50%, rgba(40,255,160,0.03) 0%, transparent 80%), url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.05%22 numOctaves=%222%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22 opacity=%220.08%22/%3E%3C/svg%3E")',
     },
     bio: [
-      'Lão Tử (nghĩa là "Ông già" hay "Thầy già") là người sáng lập Đạo giáo — một trong những trường phái triết học lớn nhất phương Đông. Ông được cho là tác giả của "Đạo Đức Kinh", một trong những tác phẩm triết học sâu sắc nhất lịch sử nhân loại.',
-      'Sự tồn tại lịch sử của Lão Tử còn nhiều tranh cãi. Dù vậy, tư tưởng Đạo gia mà ông đại diện đã ảnh hưởng sâu sắc đến văn hóa, nghệ thuật và nhân sinh quan Đông Á suốt hàng nghìn năm.',
+      'Lão Tử (nghĩa đen là "Lão Tôn" hoặc "Đứa trẻ già") là nhân vật truyền thuyết vĩ đại của Trung Hoa cổ đại. Ông được tôn vinh là người sáng lập triết học Đạo gia, một hệ tư tưởng đề cao sự hòa hợp tuyệt đối với trật tự tự nhiên của vũ trụ.',
+      'Tương truyền, trước khi ẩn cư về phương Tây, ông đã để lại 5000 chữ vô giá: "Đạo Đức Kinh". Dù sự tồn tại mang tính lịch sử của ông còn bao phủ trong màn sương mù huyền thoại, Đạo Đức Kinh vẫn đứng vững như một ngọn hải đăng của trí tuệ Đông phương suốt hai thiên niên kỷ qua.',
     ],
     coreIdeas: [
-      { title: 'Đạo (Tao)', desc: '"Đạo" là nguyên lý tối cao, không thể đặt tên, không thể định nghĩa, nhưng là nguồn gốc của vạn vật. "Đạo khả đạo, phi thường đạo" — Đạo nói ra được, không phải Đạo thường hằng.' },
-      { title: 'Vô Vi (Wu Wei)', desc: 'Không cưỡng cầu, thuận theo tự nhiên. Không phải là không làm gì, mà là hành động một cách tự nhiên, thuận lẽ, không ép buộc. Như nước mềm mỏng mà chảy qua mọi chỗ.' },
-      { title: 'Biện chứng âm dương', desc: 'Mọi thứ đều chứa đựng mầm mống của cái đối lập. Cứng và mềm, có và không, cao và thấp — chúng tạo ra nhau, không thể tách rời. Sức mạnh thật sự nằm ở sự mềm mỏng.' },
+      {
+        title: "Đạo (Tao) - Cội nguồn vũ trụ",
+        desc: '"Đạo" là nguyên lý tối cao, vô hình vô tướng, là người mẹ sinh ra vạn vật. Bất kỳ ngôn từ nào cố gắng định nghĩa Đạo đều lập tức khiến nó mất đi bản chất chân thật. "Đạo khả đạo, phi thường đạo."',
+      },
+      {
+        title: "Vô Vi (Wu Wei) - Hành động không gượng ép",
+        desc: "Vô Vi không phải là lười biếng phó mặc, mà là nghệ thuật hành động thuận theo dòng chảy tự nhiên. Không dùng sức mạnh khiên cưỡng, tựa như nước mềm mỏng chảy qua khe đá, cuối cùng nước lại có thể xuyên thủng cả núi non.",
+      },
+      {
+        title: "Biện chứng Âm Dương",
+        desc: "Sự vật luôn hàm chứa mặt đối lập của nó. Dài và ngắn hình thành lẫn nhau, cao và thấp nương tựa nhau, họa và phúc đan xen nhau. Nhận thức được vòng tuần hoàn này giúp con người đạt đến trạng thái tĩnh tại tuyệt đối.",
+      },
     ],
     quotes: [
-      'Hành trình vạn dặm bắt đầu từ một bước chân.',
-      'Biết người là trí, biết mình là sáng.',
-      'Nước là thứ mềm nhất, mà chảy mòn cả đá cứng nhất.',
-      'Thứ gì cứng nhắc và cứng rắn thì sẽ vỡ. Thứ gì mềm mại và uốn lượn thì sẽ tồn tại.',
+      "Hành trình vạn dặm bắt đầu từ một bước chân nhỏ bé.",
+      "Biết người là trí, biết mình là sáng. Thắng người là có sức, tự thắng mình mới là người mạnh thật sự.",
+      "Đạo thường không làm gì, nhưng không gì là không làm.",
+      "Mềm mỏng nhất trong thiên hạ lại có thể vượt qua sự cứng rắn nhất.",
     ],
   },
-}
+};
 
 /* ══════════════════════════════════════════════
-   BACKGROUND EFFECTS COMPONENT
+   BACKGROUND EFFECTS COMPONENT (Immersive 3.0)
 ══════════════════════════════════════════════ */
-function PhilosopherBackground({ type }: { type: ThemeConfig['effectType'] }) {
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
+function PhilosopherBackground({
+  type,
+  mousePos,
+}: {
+  type: ThemeConfig["effectType"];
+  mousePos: { x: number; y: number };
+}) {
+  const [mounted, setMounted] = useState(false);
 
-  if (!mounted) return null
+  // Cache randomized elements so they don't glitch on mousemove re-renders
+  const socratesLetters = useMemo(() => {
+    return [
+      "α",
+      "β",
+      "γ",
+      "δ",
+      "ε",
+      "ζ",
+      "η",
+      "θ",
+      "ι",
+      "κ",
+      "λ",
+      "μ",
+      "ν",
+      "ξ",
+      "ο",
+      "π",
+      "ρ",
+      "σ",
+      "τ",
+      "υ",
+      "φ",
+      "χ",
+      "ψ",
+      "ω",
+    ].map((letter) => ({
+      letter,
+      left: Math.random() * 100 + "vw",
+      top: "-50px",
+      fontSize: Math.random() * 20 + 10 + "px",
+      animationDelay: `-${Math.random() * 20}s`,
+      animationDuration: Math.random() * 10 + 10 + "s",
+    }));
+  }, []);
+
+  const marcusSnow = useMemo(() => {
+    return Array.from({ length: 150 }).map(() => ({
+      size: Math.random() * 3 + 1,
+      left: Math.random() * 100 + "vw",
+      animationDelay: `-${Math.random() * 5}s`,
+      animationDuration: Math.random() * 3 + 2 + "s",
+    }));
+  }, []);
+
+  const marxChains = useMemo(() => {
+    return Array.from({ length: 5 }).map(() => ({
+      animationDelay: `-${Math.random() * 5}s`,
+      animationDuration: Math.random() * 2 + 3 + "s",
+    }));
+  }, []);
+
+  const laoziBirds = useMemo(() => {
+    return Array.from({ length: 4 }).map(() => ({
+      animationDelay: `-${Math.random() * 15}s`,
+      animationDuration: Math.random() * 10 + 15 + "s",
+    }));
+  }, []);
+
+  const laoziLeaves = useMemo(() => {
+    return Array.from({ length: 30 }).map(() => ({
+      left: Math.random() * 100 + "vw",
+      animationDelay: `-${Math.random() * 20}s`,
+      animationDuration: Math.random() * 15 + 10 + "s",
+    }));
+  }, []);
+
+  const socratesPillarsLeft = useMemo(
+    () => Array.from({ length: 3 }).map(() => Math.random() * 20),
+    [],
+  );
+  const socratesPillarsRight = useMemo(
+    () => Array.from({ length: 3 }).map(() => Math.random() * 20),
+    [],
+  );
+
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
+
+  // Interactive parallax logic based on mouse
+  const xOffset = (mousePos.x - window.innerWidth / 2) * -0.02;
+  const yOffset = (mousePos.y - window.innerHeight / 2) * -0.02;
 
   switch (type) {
-    case 'socrates':
-      // Sacred Geometry
+    case "socrates":
       return (
-        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden opacity-30">
-          <svg className="absolute top-1/4 left-1/4 w-[800px] h-[800px] -translate-x-1/2 -translate-y-1/2" style={{ animation: 'pulse-geometry 40s linear infinite' }}>
-            <polygon points="400,100 700,600 100,600" fill="none" stroke="rgba(212,175,55,0.3)" strokeWidth="2" />
-            <circle cx="400" cy="430" r="170" fill="none" stroke="rgba(212,175,55,0.2)" strokeWidth="2" />
-          </svg>
-          <svg className="absolute bottom-0 right-0 w-[600px] h-[600px] translate-x-1/4 translate-y-1/4" style={{ animation: 'pulse-geometry 30s linear infinite reverse' }}>
-            <rect x="150" y="150" width="300" height="300" fill="none" stroke="rgba(212,175,55,0.3)" strokeWidth="2" transform="rotate(45 300 300)" />
-            <circle cx="300" cy="300" r="212" fill="none" stroke="rgba(212,175,55,0.2)" strokeWidth="2" />
-          </svg>
-        </div>
-      )
-    case 'marcus':
-      // Embers & Ash
-      return (
-        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-          {Array.from({ length: 40 }).map((_, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full"
-              style={{
-                width: Math.random() * 4 + 2 + 'px',
-                height: Math.random() * 4 + 2 + 'px',
-                background: Math.random() > 0.5 ? '#ff5050' : '#ffaa50',
-                left: Math.random() * 100 + 'vw',
-                bottom: '-10px',
-                boxShadow: '0 0 10px #ff5050',
-                animation: `float-ash ${Math.random() * 8 + 4}s linear infinite`,
-                animationDelay: `-${Math.random() * 10}s`,
-                opacity: 0,
-              }}
+        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#050604]">
+          {/* AI Generated Background */}
+          <div
+            className="absolute inset-[-5%] w-[110%] h-[110%] bg-cover bg-center opacity-40 mix-blend-screen transition-transform duration-500 ease-out"
+            style={{
+              backgroundImage: 'url("/images/bg_socrates.png")',
+              transform: `translate(${xOffset}px, ${yOffset}px)`,
+            }}
+          />
+
+          {/* Mist / Fog base */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a05] to-transparent opacity-80" />
+
+          {/* Falling Greek Letters */}
+          <div className="absolute inset-0 z-20">
+            {socratesLetters.map((item, i) => (
+              <div
+                key={i}
+                className="absolute text-[#f5d87a] font-serif"
+                style={{
+                  left: item.left,
+                  top: item.top,
+                  fontSize: item.fontSize,
+                  animation: `fall-letter ${item.animationDuration} linear infinite`,
+                  animationDelay: item.animationDelay,
+                  opacity: 0,
+                  textShadow: "0 0 10px rgba(212,175,55,0.5)",
+                }}
+              >
+                {item.letter}
+              </div>
+            ))}
+          </div>
+
+          {/* Animated SVG Pillars */}
+          <div
+            className="absolute top-0 bottom-0 left-[-10vw] w-[30vw] opacity-10 flex gap-10 transition-transform duration-500 ease-out"
+            style={{ transform: `translateX(${xOffset}px)` }}
+          >
+            {socratesPillarsLeft.map((y, i) => (
+              <div
+                key={i}
+                className="w-[10vw] h-[150vh] border-x-4 border-[#f5d87a] bg-[#f5d87a]/5"
+                style={{ transform: `translateY(-${y}vh)` }}
+              >
+                {Array.from({ length: 6 }).map((_, j) => (
+                  <div
+                    key={j}
+                    className="h-full w-px bg-[#f5d87a]/30 absolute"
+                    style={{ left: `${(j + 1) * 16}%` }}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+
+          <div
+            className="absolute top-0 bottom-0 right-[-10vw] w-[30vw] opacity-10 flex gap-10 transition-transform duration-500 ease-out"
+            style={{ transform: `translateX(${xOffset * -1}px)` }}
+          >
+            {socratesPillarsRight.map((y, i) => (
+              <div
+                key={i}
+                className="w-[10vw] h-[150vh] border-x-4 border-[#f5d87a] bg-[#f5d87a]/5"
+                style={{ transform: `translateY(-${y}vh)` }}
+              >
+                {Array.from({ length: 6 }).map((_, j) => (
+                  <div
+                    key={j}
+                    className="h-full w-px bg-[#f5d87a]/30 absolute"
+                    style={{ left: `${(j + 1) * 16}%` }}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+
+          {/* God Rays */}
+          <div
+            className="absolute -top-1/4 left-1/4 w-[150vw] h-[150vh] origin-top opacity-20 pointer-events-none mix-blend-screen"
+            style={{
+              background:
+                "linear-gradient(160deg, #f5d87a 0%, transparent 50%)",
+              animation: "god-ray 12s infinite alternate ease-in-out",
+            }}
+          />
+          <div
+            className="absolute -top-1/4 left-1/2 w-[150vw] h-[150vh] origin-top opacity-10 pointer-events-none mix-blend-screen"
+            style={{
+              background:
+                "linear-gradient(150deg, #ffffff 0%, transparent 40%)",
+              animation: "god-ray 18s infinite alternate-reverse ease-in-out",
+            }}
+          />
+
+          {/* Sacred Geometry */}
+          <svg
+            className="absolute top-1/2 left-1/2 w-[1200px] h-[1200px] -translate-x-1/2 -translate-y-1/2 opacity-[0.03] mix-blend-screen"
+            style={{ animation: "pulse-geometry 60s linear infinite" }}
+          >
+            <polygon
+              points="600,100 1033,850 167,850"
+              fill="none"
+              stroke="#f5d87a"
+              strokeWidth="1"
             />
-          ))}
-          {/* Roman marble cracks illusion */}
-          <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}></div>
-        </div>
-      )
-    case 'marx':
-      // Gears & Smoke
-      return (
-        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-          {/* Giant Gears */}
-          <svg className="absolute -left-[200px] -top-[200px] w-[600px] h-[600px] opacity-10" viewBox="0 0 100 100" style={{ animation: 'rotate-gear 60s linear infinite' }}>
-            <path fill="#ff5555" d="M50,10 L55,20 A30,30 0 0,1 80,45 L90,50 L80,55 A30,30 0 0,1 55,80 L50,90 L45,80 A30,30 0 0,1 20,55 L10,50 L20,45 A30,30 0 0,1 45,20 Z" />
-            <circle cx="50" cy="50" r="15" fill="#141414" />
+            <circle
+              cx="600"
+              cy="600"
+              r="400"
+              fill="none"
+              stroke="#f5d87a"
+              strokeWidth="1"
+            />
+            <rect
+              x="317"
+              y="317"
+              width="566"
+              height="566"
+              fill="none"
+              stroke="#f5d87a"
+              strokeWidth="1"
+              transform="rotate(45 600 600)"
+            />
           </svg>
-          <svg className="absolute -right-[100px] top-[40%] w-[400px] h-[400px] opacity-[0.08]" viewBox="0 0 100 100" style={{ animation: 'rotate-gear 40s linear infinite reverse' }}>
-            <path fill="#ff5555" d="M50,5 L58,15 A35,35 0 0,1 85,42 L95,50 L85,58 A35,35 0 0,1 58,85 L50,95 L42,85 A35,35 0 0,1 15,58 L5,50 L15,42 A35,35 0 0,1 42,15 Z" />
-            <circle cx="50" cy="50" r="20" fill="#141414" />
-          </svg>
-          {/* Smoke Gradient */}
-          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-[#1f1b1c] to-transparent opacity-80 mix-blend-multiply" />
         </div>
-      )
-    case 'laozi':
-      // Falling leaves & Ink
+      );
+
+    case "marcus":
       return (
-        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-          {Array.from({ length: 25 }).map((_, i) => (
-            <svg
-              key={i}
-              className="absolute"
-              width="24" height="24" viewBox="0 0 24 24"
-              style={{
-                fill: 'rgba(50,255,150,0.3)',
-                left: Math.random() * 100 + 'vw',
-                top: '-50px',
-                animation: `fall-leaf ${Math.random() * 10 + 10}s linear infinite`,
-                animationDelay: `-${Math.random() * 20}s`,
-                opacity: 0,
-              }}
-            >
-              <path d="M12,2 C12,2 4,6 4,14 C4,18 7,22 12,22 C17,22 20,18 20,14 C20,6 12,2 12,2 Z" />
+        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#020813]">
+          {/* AI Generated Background */}
+          <div
+            className="absolute inset-[-5%] w-[110%] h-[110%] bg-cover bg-center opacity-40 mix-blend-screen transition-transform duration-500 ease-out"
+            style={{
+              backgroundImage: 'url("/images/bg_marcus.png")',
+              transform: `translate(${xOffset}px, ${yOffset}px)`,
+            }}
+          />
+
+          {/* Intense vignette */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#000000_100%)] z-10 opacity-80" />
+
+          {/* Roman Eagle Watermark */}
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] mix-blend-color-dodge transition-transform duration-500 ease-out"
+            style={{
+              transform: `translate(calc(-50% + ${xOffset}px), calc(-50% + ${yOffset}px)) scale(1.5)`,
+            }}
+          >
+            <svg viewBox="0 0 100 100" width="800" height="800" fill="#66aaff">
+              <path d="M50 10 C 40 30, 20 40, 10 50 C 30 55, 45 45, 50 40 C 55 45, 70 55, 90 50 C 80 40, 60 30, 50 10 Z" />
+              <path d="M50 45 C 40 60, 30 80, 20 90 C 40 85, 45 75, 50 70 C 55 75, 60 85, 80 90 C 70 80, 60 60, 50 45 Z" />
+              <circle cx="50" cy="35" r="5" />
             </svg>
-          ))}
-          {/* Yin-Yang gigantic watermark */}
-          <svg className="absolute top-1/2 right-0 w-[800px] h-[800px] -translate-y-1/2 translate-x-1/4 opacity-[0.04]" viewBox="0 0 100 100" style={{ animation: 'rotate-gear 120s linear infinite' }}>
-            <circle cx="50" cy="50" r="48" fill="#fff" />
-            <path d="M50,2 A48,48 0 0,0 50,98 A24,24 0 0,0 50,50 A24,24 0 0,1 50,2" fill="#000" />
-            <circle cx="50" cy="26" r="6" fill="#fff" />
-            <circle cx="50" cy="74" r="6" fill="#000" />
-          </svg>
+          </div>
+
+          {/* Heavy Blizzard Snow */}
+          <div className="absolute inset-0 z-20">
+            {marcusSnow.map((item, i) => (
+              <div
+                key={i}
+                className="absolute rounded-full bg-[#ccddff]"
+                style={{
+                  width: item.size + "px",
+                  height: item.size + "px",
+                  left: item.left,
+                  top: "-20px",
+                  boxShadow: `0 0 ${item.size * 2}px rgba(150,200,255,0.8)`,
+                  animation: `fall-snow ${item.animationDuration} linear infinite`,
+                  animationDelay: item.animationDelay,
+                  opacity: 0,
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Frost vignette */}
+          <div
+            className="absolute bottom-0 left-0 w-full h-[30vh] opacity-30 mix-blend-screen"
+            style={{
+              background:
+                "linear-gradient(to top, rgba(100,180,255,0.2) 0%, transparent 100%)",
+              filter: "blur(10px)",
+            }}
+          />
         </div>
-      )
+      );
+
+    case "marx":
+      return (
+        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#080808]">
+          {/* AI Generated Background */}
+          <div
+            className="absolute inset-[-5%] w-[110%] h-[110%] bg-cover bg-center opacity-30 mix-blend-screen transition-transform duration-500 ease-out"
+            style={{
+              backgroundImage: 'url("/images/bg_marx.png")',
+              transform: `translate(${xOffset}px, ${yOffset}px)`,
+            }}
+          />
+
+          {/* Glitch Grid Base */}
+          <div
+            className="absolute inset-0 opacity-[0.03]"
+            style={{
+              backgroundImage:
+                "linear-gradient(#ff0000 1px, transparent 1px), linear-gradient(90deg, #ff0000 1px, transparent 1px)",
+              backgroundSize: "40px 40px",
+            }}
+          />
+
+          {/* Iron Chains Hanging */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[20vh] flex justify-around opacity-20 transition-transform duration-500 ease-out"
+            style={{ transform: `translateX(${xOffset}px)` }}
+          >
+            {marxChains.map((item, i) => (
+              <svg
+                key={i}
+                className="h-full w-4 origin-top"
+                viewBox="0 0 20 200"
+                preserveAspectRatio="none"
+                style={{
+                  animation: `swing-chain ${item.animationDuration} ease-in-out infinite alternate`,
+                  animationDelay: item.animationDelay,
+                }}
+              >
+                <path
+                  d="M5,0 L15,0 L15,20 L5,20 Z M5,20 L15,20 L15,40 L5,40 Z M5,40 L15,40 L15,60 L5,60 Z M5,60 L15,60 L15,80 L5,80 Z M5,80 L15,80 L15,100 L5,100 Z M5,100 L15,100 L15,120 L5,120 Z M5,120 L15,120 L15,140 L5,140 Z"
+                  fill="none"
+                  stroke="#ff3333"
+                  strokeWidth="2"
+                />
+              </svg>
+            ))}
+          </div>
+
+          {/* Brutalist Spinning Gears */}
+          <div
+            className="absolute top-[10%] left-[-10%] w-[80vw] h-[80vw] max-w-[1000px] max-h-[1000px] opacity-[0.03] mix-blend-screen"
+            style={{ animation: "rotate-gear 40s linear infinite" }}
+          >
+            <svg
+              viewBox="0 0 100 100"
+              fill="none"
+              stroke="#ff3333"
+              strokeWidth="2"
+            >
+              {Array.from({ length: 24 }).map((_, i) => (
+                <path
+                  key={i}
+                  d={`M50,15 L55,0 L45,0 Z`}
+                  transform={`rotate(${i * 15} 50 50)`}
+                  fill="#ff3333"
+                />
+              ))}
+              <circle cx="50" cy="50" r="35" strokeDasharray="4 4" />
+              <circle cx="50" cy="50" r="25" />
+              <circle cx="50" cy="50" r="5" fill="#ff3333" />
+            </svg>
+          </div>
+          <div
+            className="absolute bottom-[-15%] right-[-5%] w-[60vw] h-[60vw] max-w-[800px] max-h-[800px] opacity-[0.05] mix-blend-screen"
+            style={{ animation: "rotate-gear 30s linear infinite reverse" }}
+          >
+            <svg
+              viewBox="0 0 100 100"
+              fill="none"
+              stroke="#ff3333"
+              strokeWidth="3"
+            >
+              {Array.from({ length: 16 }).map((_, i) => (
+                <rect
+                  key={i}
+                  x="45"
+                  y="0"
+                  width="10"
+                  height="15"
+                  transform={`rotate(${i * 22.5} 50 50)`}
+                  fill="#ff3333"
+                />
+              ))}
+              <circle cx="50" cy="50" r="35" />
+              <circle cx="50" cy="50" r="10" />
+            </svg>
+          </div>
+
+          {/* Industrial Steam/Smoke */}
+          <div
+            className="absolute bottom-0 left-0 w-[200vw] h-[60vh] bg-gradient-to-t from-[#110000] via-[#220000] to-transparent opacity-40 mix-blend-screen transition-transform duration-500 ease-out"
+            style={{
+              animation: "float-mist 20s ease-in-out infinite alternate",
+              transform: `translateX(${xOffset}px)`,
+            }}
+          />
+
+          {/* Siren Sweeping Light */}
+          <div
+            className="absolute inset-0 pointer-events-none z-30 opacity-20 mix-blend-screen"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent, #ff0000, transparent)",
+              width: "50vw",
+              animation: "siren-sweep 4s linear infinite",
+            }}
+          />
+
+          {/* CRT Scanline & Laser */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-[0.04] z-20"
+            style={{
+              background:
+                "repeating-linear-gradient(0deg, transparent, transparent 2px, #fff 2px, #fff 4px)",
+            }}
+          />
+          <div
+            className="absolute top-0 left-0 right-0 h-[2px] bg-[#ff3333] opacity-40 blur-[2px] z-30"
+            style={{ animation: "laser-scan 8s linear infinite" }}
+          />
+        </div>
+      );
+
+    case "laozi":
+      return (
+        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#020504]">
+          {/* AI Generated Background */}
+          <div
+            className="absolute inset-[-5%] w-[110%] h-[110%] bg-cover bg-center opacity-40 mix-blend-screen transition-transform duration-500 ease-out"
+            style={{
+              backgroundImage: 'url("/images/bg_laozi.png")',
+              transform: `translate(${xOffset}px, ${yOffset}px)`,
+            }}
+          />
+
+          {/* Water reflection floor */}
+          <div className="absolute bottom-0 left-0 right-0 h-[30vh] bg-gradient-to-t from-[#20ffaa]/5 to-transparent backdrop-blur-[2px] z-10" />
+
+          {/* Massive Ink Yin-Yang */}
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] opacity-[0.02] mix-blend-screen"
+            style={{
+              animation: "rotate-gear 120s linear infinite",
+              filter: "blur(8px)",
+            }}
+          >
+            <svg viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="48" fill="#fff" />
+              <path
+                d="M50,2 A48,48 0 0,0 50,98 A24,24 0 0,0 50,50 A24,24 0 0,1 50,2"
+                fill="#000"
+              />
+            </svg>
+          </div>
+
+          {/* Bamboo Silhouette Swaying */}
+          <div
+            className="absolute bottom-0 left-[-5vw] w-[30vw] h-[80vh] opacity-20 origin-bottom mix-blend-screen"
+            style={{
+              animation: "bamboo-sway 10s ease-in-out infinite alternate",
+            }}
+          >
+            <svg
+              viewBox="0 0 100 300"
+              preserveAspectRatio="none"
+              className="w-full h-full"
+              fill="#66ffbb"
+            >
+              <path d="M45,300 C48,200 40,100 50,0 C55,100 52,200 50,300 Z" />
+              <path d="M50,150 C60,140 70,145 80,130 C70,135 60,145 50,150 Z" />
+              <path d="M48,200 C30,190 20,180 10,195 C20,185 35,195 48,200 Z" />
+              <path d="M49,80 C65,70 75,75 85,60 C75,65 65,75 49,80 Z" />
+            </svg>
+          </div>
+          <div
+            className="absolute bottom-0 right-[5vw] w-[20vw] h-[60vh] opacity-15 origin-bottom mix-blend-screen"
+            style={{
+              animation:
+                "bamboo-sway 8s ease-in-out infinite alternate-reverse",
+              transform: "scaleX(-1)",
+            }}
+          >
+            <svg
+              viewBox="0 0 100 300"
+              preserveAspectRatio="none"
+              className="w-full h-full"
+              fill="#66ffbb"
+            >
+              <path d="M45,300 C48,200 40,100 50,0 C55,100 52,200 50,300 Z" />
+              <path d="M50,150 C60,140 70,145 80,130 C70,135 60,145 50,150 Z" />
+            </svg>
+          </div>
+
+          {/* Ink Birds Flying */}
+          <div className="absolute inset-0 z-30 pointer-events-none">
+            {laoziBirds.map((item, i) => (
+              <svg
+                key={i}
+                className="absolute w-8 h-8 opacity-40 mix-blend-screen"
+                viewBox="0 0 100 100"
+                style={{
+                  animation: `fly-bird ${item.animationDuration} ease-in-out infinite`,
+                  animationDelay: item.animationDelay,
+                }}
+              >
+                <path
+                  d="M10,50 Q30,20 50,50 Q70,20 90,50 Q70,40 50,60 Q30,40 10,50 Z"
+                  fill="#66ffbb"
+                />
+              </svg>
+            ))}
+          </div>
+
+          {/* Falling Ink Leaves */}
+          <div className="absolute inset-0 z-20">
+            {laoziLeaves.map((item, i) => (
+              <svg
+                key={i}
+                className="absolute"
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                style={{
+                  fill: "rgba(100,255,180,0.4)",
+                  filter: "blur(1px)",
+                  left: item.left,
+                  top: "-50px",
+                  animation: `fall-leaf ${item.animationDuration} linear infinite`,
+                  animationDelay: item.animationDelay,
+                  opacity: 0,
+                }}
+              >
+                <path d="M12,2 C12,2 2,7 2,14 C2,19 7,22 12,22 C17,22 22,19 22,14 C22,7 12,2 12,2 Z" />
+              </svg>
+            ))}
+          </div>
+
+          {/* Zen Mist Layer */}
+          <div
+            className="absolute bottom-0 left-0 w-[200vw] h-[50vh] bg-gradient-to-t from-[#091a14] to-transparent opacity-60 transition-transform duration-500 ease-out"
+            style={{
+              animation: "float-mist 30s ease-in-out infinite alternate",
+              transform: `translateX(${xOffset}px)`,
+            }}
+          />
+        </div>
+      );
   }
 }
 
@@ -239,73 +734,125 @@ function PhilosopherBackground({ type }: { type: ThemeConfig['effectType'] }) {
    MAIN COMPONENT
 ══════════════════════════════════════════════ */
 export default function PhilosopherProfile() {
-  const { id } = useParams<{ id: string }>()
-  const data = id ? philosopherData[id] : null
+  const { id } = useParams<{ id: string }>();
+  const data = id ? philosopherData[id] : null;
+  const [mousePos, setMousePos] = useState({
+    x: typeof window !== "undefined" ? window.innerWidth / 2 : 0,
+    y: typeof window !== "undefined" ? window.innerHeight / 2 : 0,
+  });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
   if (!data) {
     return (
       <div className="min-h-screen bg-[#060912] flex items-center justify-center pt-20">
         <div className="text-center">
-          <h1 className="text-4xl font-serif text-white mb-4">Lỗi Hệ Thống Lượng Tử</h1>
-          <p className="text-white/50 mb-6">Dữ liệu về triết gia này chưa được tải lên hệ thống.</p>
-          <Link to="/modules" className="text-cyan-400 hover:text-cyan-300 hover:underline">Quay về Trạm Chuyển Tiếp</Link>
+          <h1 className="text-4xl font-serif text-white mb-4">
+            Lỗi Hệ Thống Lượng Tử
+          </h1>
+          <p className="text-white/50 mb-6">
+            Dữ liệu về triết gia này chưa được giải mã.
+          </p>
+          <Link
+            to="/modules"
+            className="text-cyan-400 hover:text-cyan-300 hover:underline"
+          >
+            Quay về Trạm Chuyển Tiếp
+          </Link>
         </div>
       </div>
-    )
+    );
   }
 
-  const { theme } = data
+  const { theme } = data;
 
   return (
-    <div className={`min-h-screen bg-gradient-to-b ${theme.bgGradient} text-white selection:bg-white/20 relative overflow-hidden pb-32`}>
-      <PhilosopherBackground type={theme.effectType} />
+    <div
+      className={`min-h-screen bg-gradient-to-b ${theme.bgGradient} text-white selection:bg-white/20 relative overflow-hidden pb-32`}
+    >
+      <PhilosopherBackground type={theme.effectType} mousePos={mousePos} />
+
+      {/* Global Mouse Tracking Spotlight */}
+      <div
+        className="fixed inset-0 z-[1] pointer-events-none transition-opacity duration-300 mix-blend-screen opacity-70"
+        style={{
+          background: `radial-gradient(800px circle at ${mousePos.x}px ${mousePos.y}px, ${theme.glowColor}, transparent 40%)`,
+        }}
+      />
 
       <div className="max-w-5xl mx-auto px-6 relative z-10 pt-16">
-        
         {/* Back Link */}
-        <Link 
-          to="/modules" 
-          className="inline-flex items-center gap-2 text-white/40 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest mb-16"
+        <Link
+          to="/modules"
+          className="inline-flex items-center gap-2 text-white/40 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest mb-16 relative z-20 group"
         >
-          <ArrowLeft size={16} /> Thư viện Hiền nhân
+          <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center group-hover:border-white/50 transition-colors bg-black/50">
+            <ArrowLeft size={14} />
+          </div>
+          Thư viện Hiền nhân
         </Link>
 
         {/* ── HERO SECTION ── */}
-        <header className="flex flex-col md:flex-row items-center md:items-start gap-10 mb-24 relative">
-          <div className="relative shrink-0 group">
+        <header className="flex flex-col md:flex-row items-center md:items-start gap-12 mb-32 relative">
+          <div className="relative shrink-0 group perspective-1000">
             {/* Glowing Avatar */}
-            <div 
-              className="w-32 h-32 md:w-40 md:h-40 rounded-full border border-white/20 flex items-center justify-center text-5xl md:text-6xl font-serif bg-black/50 backdrop-blur-md relative z-10 transition-transform duration-700 group-hover:scale-105"
-              style={{ color: theme.textColor.replace('text-[', '').replace(']', '') }}
+            <div
+              className="w-40 h-40 md:w-48 md:h-48 rounded-full border border-white/20 flex items-center justify-center text-6xl md:text-7xl font-serif bg-black/60 backdrop-blur-xl relative z-10 transition-all duration-700 group-hover:scale-105 group-hover:rotate-[-5deg] overflow-hidden"
+              style={{
+                color: theme.textColor.replace("text-[", "").replace("]", ""),
+                boxShadow: `inset 0 0 40px ${theme.glowColor}, 0 0 20px rgba(0,0,0,0.5)`,
+              }}
             >
-              {data.letter}
+              <div
+                className="absolute inset-0 opacity-20 mix-blend-overlay"
+                style={{ background: theme.cardPattern }}
+              />
+              <span className="relative z-10 drop-shadow-2xl">
+                {data.letter}
+              </span>
             </div>
             {/* Ambient Glow */}
-            <div 
-              className="absolute inset-0 rounded-full blur-[40px] opacity-60 transition-opacity duration-700 group-hover:opacity-100"
+            <div
+              className="absolute inset-0 rounded-full blur-[50px] opacity-60 transition-opacity duration-700 group-hover:opacity-100 animate-pulse"
               style={{ background: theme.glowColor }}
             />
           </div>
 
-          <div className="text-center md:text-left flex-1">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 mb-6">
-              <Sparkles size={14} className={theme.textColor} />
-              <span className={`text-[10px] font-bold uppercase tracking-[0.2em] ${theme.textColor}`}>
+          <div className="text-center md:text-left flex-1 relative z-20">
+            <div
+              className={`inline-flex items-center gap-3 px-5 py-2 rounded-full border border-white/10 bg-black/50 backdrop-blur-md mb-8 transition-transform hover:scale-105`}
+            >
+              <Sparkles size={16} className={theme.textColor} />
+              <span
+                className={`text-[11px] font-bold uppercase tracking-[0.25em] ${theme.textColor} drop-shadow-lg`}
+              >
                 {data.role}
               </span>
             </div>
-            
-            <h1 className="text-5xl md:text-7xl font-serif mb-4 leading-tight">
+
+            <h1
+              className="text-6xl md:text-8xl font-serif mb-6 leading-none tracking-tight drop-shadow-2xl"
+              style={{ textShadow: `0 10px 30px ${theme.glowColor}` }}
+            >
               {data.name}
             </h1>
-            
-            <p className="text-xl text-white/50 font-serif italic mb-8">
+
+            <p className="text-2xl text-white/50 font-serif italic mb-10 tracking-wide">
               {data.life}
             </p>
 
-            <div className="w-16 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent mx-auto md:mx-0 mb-8" />
+            <div className="w-24 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto md:mx-0 mb-10" />
 
-            <div className="space-y-4 text-white/70 leading-relaxed text-lg font-light">
+            <div
+              className="space-y-6 text-white/80 leading-relaxed text-lg font-light md:text-xl text-justify md:text-left"
+              style={{ textShadow: "0 2px 10px rgba(0,0,0,0.8)" }}
+            >
               {data.bio.map((para, i) => (
                 <p key={i}>{para}</p>
               ))}
@@ -314,37 +861,61 @@ export default function PhilosopherProfile() {
         </header>
 
         {/* ── CORE IDEAS ── */}
-        <section className="mb-32">
-          <div className="flex items-center gap-4 mb-12 justify-center md:justify-start">
-            <Brain className={theme.textColor} size={28} />
-            <h2 className="text-3xl font-serif">Tư Tưởng Cốt Lõi</h2>
+        <section className="mb-32 relative z-20">
+          <div className="flex items-center gap-4 mb-16 justify-center md:justify-start">
+            <div className="p-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md">
+              <Brain className={theme.textColor} size={28} />
+            </div>
+            <h2 className="text-4xl font-serif drop-shadow-lg">
+              Di Sản Tư Tưởng
+            </h2>
           </div>
-          
-          <div className="grid md:grid-cols-3 gap-6">
+
+          <div className="grid md:grid-cols-3 gap-8">
             {data.coreIdeas.map((idea, i) => (
-              <div 
-                key={i} 
-                className={`relative group p-8 rounded-3xl border border-white/5 ${theme.cardBg} backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:border-white/20`}
+              <div
+                key={i}
+                className={`relative group p-10 rounded-3xl border border-white/10 ${theme.cardBg} backdrop-blur-2xl transition-all duration-700 hover:-translate-y-4 overflow-hidden`}
                 style={{
-                  boxShadow: `0 10px 40px rgba(0,0,0,0.5), inset 0 0 0 1px ${theme.glowColor.replace('0.3', '0.05')}`
+                  boxShadow: `0 20px 50px rgba(0,0,0,0.5), inset 0 0 0 1px ${theme.glowColor.replace("0.3", "0.05")}`,
                 }}
               >
+                {/* Thematic Background Pattern reveals on hover */}
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 mix-blend-overlay z-0"
+                  style={{ background: theme.cardPattern }}
+                />
+
+                {/* Light reflection follows mouse inside card */}
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0 mix-blend-soft-light pointer-events-none"
+                  style={{
+                    background: `radial-gradient(400px circle at 50% 100%, ${theme.glowColor}, transparent 50%)`,
+                  }}
+                />
+
                 {/* Number indicator */}
-                <div className={`absolute top-6 right-6 text-6xl font-serif font-black opacity-[0.03] transition-opacity duration-500 group-hover:opacity-10 ${theme.textColor}`}>
+                <div
+                  className={`absolute top-4 right-6 text-8xl font-serif font-black opacity-[0.02] transition-all duration-700 group-hover:opacity-[0.08] group-hover:-translate-y-2 ${theme.textColor} z-0 pointer-events-none`}
+                >
                   0{i + 1}
                 </div>
-                
-                <h3 className={`text-xl font-serif mb-4 ${theme.textColor}`}>
+
+                <h3
+                  className={`text-2xl font-serif mb-5 ${theme.textColor} relative z-10 drop-shadow-md`}
+                >
                   {idea.title}
                 </h3>
-                <p className="text-white/60 text-sm leading-relaxed relative z-10">
+                <p className="text-white/70 text-base leading-relaxed relative z-10 font-light">
                   {idea.desc}
                 </p>
 
                 {/* Hover Glow line */}
-                <div 
-                  className="absolute bottom-0 left-8 right-8 h-[2px] transition-all duration-500 origin-center scale-x-0 group-hover:scale-x-100"
-                  style={{ background: `linear-gradient(90deg, transparent, ${theme.glowColor}, transparent)` }}
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-[3px] transition-all duration-700 origin-left scale-x-0 group-hover:scale-x-100 z-10"
+                  style={{
+                    background: `linear-gradient(90deg, ${theme.glowColor.replace("0.3", "1")}, transparent)`,
+                  }}
                 />
               </div>
             ))}
@@ -352,45 +923,69 @@ export default function PhilosopherProfile() {
         </section>
 
         {/* ── QUOTES ── */}
-        <section>
-          <div className="flex items-center gap-4 mb-12 justify-center md:justify-start">
-            <Quote className={theme.textColor} size={28} />
-            <h2 className="text-3xl font-serif">Danh Ngôn Bất Hủ</h2>
+        <section className="relative z-20">
+          <div className="flex items-center gap-4 mb-16 justify-center md:justify-start">
+            <div className="p-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md">
+              <Quote className={theme.textColor} size={28} />
+            </div>
+            <h2 className="text-4xl font-serif drop-shadow-lg">
+              Danh Ngôn Bất Hủ
+            </h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-10">
             {data.quotes.map((quote, i) => (
-              <div 
-                key={i} 
-                className="relative p-10 rounded-[2rem] overflow-hidden group"
+              <div
+                key={i}
+                className="relative p-12 rounded-[2.5rem] overflow-hidden group transition-transform duration-700 hover:scale-[1.02]"
               >
                 {/* Background Glass */}
-                <div className={`absolute inset-0 ${theme.cardBg} backdrop-blur-md opacity-40 border border-white/5 rounded-[2rem] transition-opacity duration-500 group-hover:opacity-60`} />
-                
-                {/* Big Quote Icon watermark */}
-                <Quote 
-                  className="absolute -top-4 -left-4 w-32 h-32 text-white opacity-[0.02] transform -scale-x-100 transition-transform duration-700 group-hover:scale-110 group-hover:-scale-x-110" 
+                <div
+                  className={`absolute inset-0 ${theme.cardBg} backdrop-blur-xl opacity-60 border border-white/10 rounded-[2.5rem] transition-all duration-700 group-hover:opacity-80 group-hover:border-white/20`}
                 />
-                
-                <p className="relative z-10 text-xl md:text-2xl font-serif leading-relaxed italic text-white/90" style={{ fontFamily: "'Playfair Display', serif" }}>
+
+                {/* Interactive highlight */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+                {/* Big Quote Icon watermark */}
+                <Quote className="absolute -top-6 -left-6 w-48 h-48 text-white opacity-[0.015] transform -scale-x-100 transition-all duration-1000 group-hover:scale-125 group-hover:-scale-x-125 group-hover:opacity-[0.04] group-hover:rotate-12" />
+
+                <p
+                  className="relative z-10 text-2xl md:text-3xl font-serif leading-relaxed italic text-white/90 drop-shadow-xl"
+                  style={{ fontFamily: "'Playfair Display', serif" }}
+                >
                   "{quote}"
                 </p>
+
+                {/* Decorative dot */}
+                <div
+                  className={`absolute bottom-8 right-12 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100`}
+                  style={{
+                    background: theme.textColor
+                      .replace("text-[", "")
+                      .replace("]", ""),
+                    boxShadow: `0 0 10px ${theme.glowColor}`,
+                  }}
+                />
               </div>
             ))}
           </div>
         </section>
 
         {/* Footer actions */}
-        <div className="mt-32 text-center">
-          <Link 
-            to="/modules" 
-            className="inline-flex items-center gap-3 px-8 py-4 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 transition-all duration-300 text-sm tracking-widest uppercase hover:scale-105"
+        <div className="mt-40 text-center relative z-20">
+          <Link
+            to="/modules"
+            className={`inline-flex items-center gap-4 px-10 py-5 rounded-full border border-white/10 bg-black/50 backdrop-blur-xl transition-all duration-500 text-sm tracking-widest uppercase hover:scale-105 hover:border-white/30`}
+            style={{
+              boxShadow: `0 20px 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.02)`,
+            }}
           >
-            Trở lại Khám phá các Module <MoveRight size={16} />
+            Trở lại Khám phá các Module{" "}
+            <MoveRight size={18} className={theme.textColor} />
           </Link>
         </div>
-
       </div>
     </div>
-  )
+  );
 }
